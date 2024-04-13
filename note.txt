@@ -1,3 +1,26 @@
 #Command lines
 
+#regular
+
+#initializing
 -npx prisma init --datasource-provider postgresql
+
+#connect to the database and create prisma client
+-npx prisma migrate dev
+
+#to use the prisma client
+-npm i @prisma/client
+-npx prisma generate (copy the given codes and paste it in the script.ts file)
+
+#Next JS
+#initializing
+-npm i -D prisma
+-npm i @prisma/client
+-npx prisma init
+
+#connect to the database and create prisma client
+-npx prisma generate (to use prisma client)
+-npx prisma db push (db is now in sync with prisma schema)
+
+
+-copy prisma client codes from google at lib/prismadb.ts or prisma/client.ts 
