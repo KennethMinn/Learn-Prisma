@@ -22,5 +22,7 @@
 -npx prisma generate (to use prisma client)
 -npx prisma db push (db is now in sync with prisma schema)
 
-
 -copy prisma client codes from google at lib/prismadb.ts or prisma/client.ts 
+
+#type modifier 
+-there is only two type modifiers -> ? and []
