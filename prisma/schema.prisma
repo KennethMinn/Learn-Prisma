@@ -13,44 +13,65 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//enum
+enum Role {
+  USER
+  ADMIN
+}
+
 //one to many -> a user has many posts and one post has one author(user)
 
-//a model can have four fields (name, type, @attribute(optional), @attribute(optional))
+//a model can have four fields (name, type,field lvl @attribute(optional),field lvl @attribute(optional))
 model User {
-  id           String   @id @default(uuid()) //a model must have an id
-  name         String? //this is optional
-  isAdmin      Boolean
-  posts        Post[] //[] is a type modifier
-  //two refrences
-  closeFriends Friend[] @relation("CloseFriends")
-  newFriends   Friend[] @relation("NewFriends")
+  id      String  @id @default(uuid()) //a model must have an id
+  name    String? // ? -> this is optional
+  email   String  @unique
+  isAdmin Boolean
+  role    Role    @default(USER) //enum
+
+  //one to one with UserPrefrence model
+  UserPrefrence UserPrefrence? // must be optional
+
+  //one to many
+  //two refrences -> no need to add labels for only one refrence
+  writtenPosts   Post[] @relation("WrittenPosts") //[] is a type modifier
+  favoritedPosts Post[] @relation("FavoritedPosts")
+
+  //block lvl @attribute
+  @@unique([name]) //we can also set unique fields in block lvl @attribute
 }
 
 model Post {
-  id         Int      @id @default(autoincrement())
-  rating     Float //general
-  rate       Decimal //wider range
-  createdAt  DateTime
-  updatedAt  DateTime
-  author     User     @relation(fields: [userId], references: [id])
-  userId     String
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId Int
+  id        Int      @id @default(autoincrement())
+  rating    Float //general
+  rate      Decimal //wider range
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //one to many
+  //two refrences -> no need to add labels for only one refrence
+  author        User   @relation("WrittenPosts", fields: [authorId], references: [id])
+  authorId      String
+  favoriteByWho User   @relation("FavoritedPosts", fields: [favoriteById], references: [id])
+  favoriteById  String
+
+  //many to many with Category model
+  categories Category[]
 }
 
 model Category {
-  id    Int    @id @default(autoincrement())
-  name  String
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  //many to many with Post model
   posts Post[]
 }
 
-model Friend {
-  id   String @id @default(uuid())
-  name String
+model UserPrefrence {
+  id           String  @id @default(uuid())
+  emailUpdates Boolean
 
-  //two refrences
-  closeFriendOf User?   @relation("CloseFriends", fields: [closeFriendId], references: [id])
-  closeFriendId String?
-  newFriendOf   User?   @relation("NewFriends", fields: [newFriendId], references: [id])
-  newFriendId   String?
+  //one to one with User model
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique //must be unique
 }
