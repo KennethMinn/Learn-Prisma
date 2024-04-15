@@ -30,9 +30,10 @@ model User {
   role    Role    @default(USER) //enum
 
   //one to one with UserPrefrence model
-  UserPrefrence UserPrefrence? // must be optional
+  userPrefrence   UserPrefrence? @relation(fields: [userPrefrenceId], references: [id]) //foreign id (when the user is deleted userPrefrence will be deleted too)
+  userPrefrenceId String?        @unique // must be unique
 
-  //one to many
+  //one to many with Post model
   //two refrences -> no need to add labels for only one refrence
   writtenPosts   Post[] @relation("WrittenPosts") //[] is a type modifier
   favoritedPosts Post[] @relation("FavoritedPosts")
@@ -48,7 +49,7 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  //one to many
+  //one to many with User model
   //two refrences -> no need to add labels for only one refrence
   author        User   @relation("WrittenPosts", fields: [authorId], references: [id])
   authorId      String
@@ -72,6 +73,5 @@ model UserPrefrence {
   emailUpdates Boolean
 
   //one to one with User model
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @unique //must be unique
+  user User? // must be optional - ?
 }

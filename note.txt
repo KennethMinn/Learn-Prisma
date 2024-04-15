@@ -18,7 +18,7 @@
 -npm i @prisma/client
 -npx prisma init
 
-#connect to the database and create prisma client
+#connect to the database and create prisma client - run this after making every changes in prisma schema *****
 -npx prisma generate (to use prisma client)
 -npx prisma db push (db is now in sync with prisma schema)
 
@@ -26,3 +26,5 @@
 
 #type modifier 
 -there is only two type modifiers -> ? and []
+
+*when i save the prisma schema, the first model which is written relation first wont have foreign id, it will add to the other model
