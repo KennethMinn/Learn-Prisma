@@ -29,6 +29,8 @@
 
 *when i save the prisma schema, the first model(independent model) which is written relation field first wont have foreign id, it will add to the other model(dependent mode)
 
+--------------------------------------------------------------------------------------------------
+
 ***** Important to understand ******
 -the model that has relation @attribute is a dependent model
 
@@ -37,14 +39,90 @@
 //independent model
 model User {
    id    String @id @default(uuid())
-   posts Post[] // user has many posts - when the user is deleted, post should be deleted too
+
+   //user has many posts - when the user is deleted, post should be deleted too
+   posts Post[] 
 }
 
 //dependent model
 model Post  {
    id        String @id @default(uuid())   
 
-   //a post has an author
-   author    User   @relation(fields : [authorId], references : [id], onDelete : Cascade) // Post will be deleted when the user is deleted
+   //a post has an author - Post will be deleted when the user is deleted
+   author    User   @relation(fields : [authorId], references : [id], onDelete : Cascade) 
    authorId  String
+}
+
+#where clause - advanced filtering
+where : {
+   //can combine them depending on the project -> combining them will filter with AND not OR
+   name : {
+      not : "mtk" // name !== "mtk" 
+      in  : ["mtk" , "kenneth"]   //name === "mtk" || name === "kenneth" 
+      notIn : ["mtk" , "kenneth"] //name !== "mtk" || name !== "kenneth" 
+   },
+   age : {
+     lt : 20 //less than 20 
+     gt : 20 //greater than 20 
+   },
+   email : {
+      contains   : "@gmail.com" // "mtk@gmail.com".includes("@gmail.com")
+      endsWith   : "@gmail.com" // "mtk@gmail.com".endsWith("@gmail.com")
+      startsWith : "mtk" // "mtk@gmail.com".startsWith("@gmail.com")
+   },
+   
+   //email startsWith "mtk" AND endsWith "@gmail.com"
+   AND : [
+      {email : {
+         startsWith : "mtk"
+      }},
+      {email : {
+         endsWith   : "@gmail.com"
+      }}
+   ],
+
+   //email startsWith "mtk" OR endsWith "@gmail.com"
+   OR : [
+      {email : {
+         startsWith : "mtk"
+      }},
+      {age : {
+         lt   : 20
+      }}
+   ],
+
+   //email NOT startsWith "mtk"
+   NOT : {email : {startsWith : "mtk"}} 
+}
+
+#relation filtering - don't forget to include
+
+//independent model
+where : {
+   //one to one
+   userPrefrence : {
+      emailUpdates : true
+   },
+
+   //one to many
+   writtenPosts : {
+      //every, some, none are the keys (use one of them)
+      every : {
+         rating : {
+            gt : 8.0
+         }
+      }
+   }
+}
+
+//dependent model
+-the rest are the same
+where : {
+   //one to many
+   //isNot is also the key (use one of them)
+   author : { 
+      is : {
+         age : 18 // author.age === 27
+      }
+   }
 }

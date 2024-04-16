@@ -30,8 +30,7 @@ model User {
   role    Role    @default(USER) //enum
 
   //one to one with UserPrefrence model
-  userPrefrence   UserPrefrence? @relation(fields: [userPrefrenceId], references: [id])
-  userPrefrenceId String?        @unique // must be unique
+  userPrefrence UserPrefrence? //must be optional
 
   //one to many with Post model
   //two refrences -> no need to add labels for only one refrence
@@ -39,7 +38,7 @@ model User {
   favoritedPosts Post[] @relation("FavoritedPosts")
 
   //block lvl @attribute
-  @@unique([name]) //we can also set unique fields in block lvl @attribute
+  @@unique([name, email]) //we can also set unique fields in block lvl @attribute
 }
 
 model Post {
@@ -72,6 +71,6 @@ model UserPrefrence {
   id           String  @id @default(uuid())
   emailUpdates Boolean
 
-  //one to one with User model
-  user User? // must be optional - ?
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique //must be unique
 }
