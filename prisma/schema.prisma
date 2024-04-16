@@ -30,7 +30,7 @@ model User {
   role    Role    @default(USER) //enum
 
   //one to one with UserPrefrence model
-  userPrefrence   UserPrefrence? @relation(fields: [userPrefrenceId], references: [id]) //foreign id (when the user is deleted userPrefrence will be deleted too)
+  userPrefrence   UserPrefrence? @relation(fields: [userPrefrenceId], references: [id])
   userPrefrenceId String?        @unique // must be unique
 
   //one to many with Post model

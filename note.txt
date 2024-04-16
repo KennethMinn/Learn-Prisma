@@ -27,4 +27,24 @@
 #type modifier 
 -there is only two type modifiers -> ? and []
 
-*when i save the prisma schema, the first model which is written relation first wont have foreign id, it will add to the other model
+*when i save the prisma schema, the first model(independent model) which is written relation field first wont have foreign id, it will add to the other model(dependent mode)
+
+***** Important to understand ******
+-the model that has relation @attribute is a dependent model
+
+#Correct Usage
+
+//independent model
+model User {
+   id    String @id @default(uuid())
+   posts Post[] // user has many posts - when the user is deleted, post should be deleted too
+}
+
+//dependent model
+model Post  {
+   id        String @id @default(uuid())   
+
+   //a post has an author
+   author    User   @relation(fields : [authorId], references : [id], onDelete : Cascade) // Post will be deleted when the user is deleted
+   authorId  String
+}
