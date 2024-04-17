@@ -105,6 +105,7 @@ async function main() {
   //update user
   const update_user = await prisma.user.update({
     where: {
+      //email or id
       email: "mtkk@gmail.com", //must be unique field
     },
     data: {
