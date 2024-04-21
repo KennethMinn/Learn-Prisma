@@ -2,6 +2,13 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
+  //delete user
+  // await prisma.user.delete({
+  //   where: {
+  //     email: "email@gmail.com", //must be unique field
+  //   },
+  // });
+
   //delete users
   await prisma.user.deleteMany();
 
@@ -113,9 +120,15 @@ async function main() {
 
       //update one to one relation
       userPrefrence: {
-        //have to use create as a key
-        create: {
-          emailUpdates: true,
+        //upsert
+        //will try to connect to an existing record if it exists, and if it doesn't, it will create a new record
+        connectOrCreate: {
+          where: {
+            id: "user preference id", //nothing will change, existing prefrence will connect with user
+          },
+          create: {
+            emailUpdates: true, //will create a new preference and connect with user
+          },
         },
       },
     },
@@ -123,8 +136,14 @@ async function main() {
       userPrefrence: true,
     },
   });
-  console.log(users);
-  console.log(update_user);
+
+  //create usePreference(dependent) model
+  const userPreference = await prisma.userPrefrence.create({
+    data: {
+      emailUpdates: false,
+      userId: "d3fbca92-2d04-4c5e-b734-05ac4b623ffc", // must add - to connect relation with that one specific user
+    },
+  });
 }
 
 main()
