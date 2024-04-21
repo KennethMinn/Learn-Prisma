@@ -73,6 +73,14 @@ async function main() {
     ],
   });
 
+  //create usePreference(dependent) model
+  const userPreference = await prisma.userPrefrence.create({
+    data: {
+      emailUpdates: false,
+      userId: "d3fbca92-2d04-4c5e-b734-05ac4b623ffc", // must add - to connect relation with that one specific user
+    },
+  });
+
   //get user - can only filter unique fileds
   const user = await prisma.user.findUnique({
     where: {
@@ -134,14 +142,6 @@ async function main() {
     },
     include: {
       userPrefrence: true,
-    },
-  });
-
-  //create usePreference(dependent) model
-  const userPreference = await prisma.userPrefrence.create({
-    data: {
-      emailUpdates: false,
-      userId: "d3fbca92-2d04-4c5e-b734-05ac4b623ffc", // must add - to connect relation with that one specific user
     },
   });
 }
