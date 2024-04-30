@@ -81,7 +81,7 @@ where : {
       }}
    ],
 
-   //email startsWith "mtk" OR endsWith "@gmail.com"
+   //email startsWith "mtk" OR age less than 20
    OR : [
       {email : {
          startsWith : "mtk"
