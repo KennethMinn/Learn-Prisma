@@ -128,6 +128,19 @@ async function main() {
 
       //update one to one relation
       userPrefrence: {
+        //upsert
+        // upsert : {
+        //   where : {
+        //     id : "userPrefrenceId"
+        //   },
+        //   update : {
+        //     emailUpdates : true //Data to update if the user is found
+        //   },
+        //   create : {
+        //     emailUpdates : true // Data to create if the user is not found - must add all fields
+        //   }
+        // }
+
         //connect
         // connect: {
         //   id: "userPrefrenceId",
@@ -137,7 +150,7 @@ async function main() {
         //will try to connect to an existing record if it exists, and if it doesn't, it will create a new record
         connectOrCreate: {
           where: {
-            id: "user preference id", //nothing will change, existing prefrence will connect with user
+            id: "userPrefrenceId", //nothing will change, existing prefrence will connect with user
           },
           create: {
             emailUpdates: true, //will create a new preference and connect with user
