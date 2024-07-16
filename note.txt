@@ -8,6 +8,9 @@
 #connect to the database and create prisma client
 -npx prisma migrate dev
 
+-npx prisma migrate reset - refresh
+-npx prisma studio - can see the db table
+
 #to use the prisma client
 -npm i @prisma/client
 -npx prisma generate (copy the given codes and paste it in the script.ts file)
