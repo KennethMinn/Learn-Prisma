@@ -128,6 +128,11 @@ async function main() {
 
       //update one to one relation
       userPrefrence: {
+        //connect
+        // connect: {
+        //   id: "userPrefrenceId",
+        // },
+
         //upsert
         //will try to connect to an existing record if it exists, and if it doesn't, it will create a new record
         connectOrCreate: {
